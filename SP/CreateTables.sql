@@ -29,22 +29,57 @@ SET @ErrorText = 'Unexpected ERROR in setting the variables!';
 SET @SP = OBJECT_NAME(@@PROCID)
 SET @StartTime = GETDATE();    
 SET @Message = 'Started SP ' + @SP + ' at ' + FORMAT(@StartTime , 'MM/dd/yyyy HH:mm:ss');  
- 
 RAISERROR (@Message, 0,1) WITH NOWAIT;
 
 -------------------------------------------------------------------------------
-SET @ErrorText = 'Failed CREATE Table gameDW.Retailer.';
+SET @ErrorText = 'Failed CREATE Table gameDW.DimTime.';
 
 IF EXISTS (SELECT *
 FROM sys.objects
-WHERE object_id = OBJECT_ID(N'gameDW.Retailer') AND type in (N'U'))
+WHERE object_id = OBJECT_ID(N'gameDW.DimTime') AND type in (N'U'))
 BEGIN
-    SET @Message = 'Table gameDW.Retailer already exist, skipping....';
+    SET @Message = 'Table gameDW.DimTime already exist, skipping....';
     RAISERROR(@Message, 0,1) WITH NOWAIT;
 END
 ELSE
 BEGIN
-    CREATE TABLE gameDW.Retailer
+    CREATE TABLE gameDW.DimTime
+    (
+        TimeKey int IDENTITY (1, 1) NOT NULL ,
+        -- ActualDate datetime NOT NULL ,
+        ActualDate DATE NOT NULL ,
+        Year int NOT NULL ,
+        Quarter int NOT NULL ,
+        Month int NOT NULL ,
+        Week int NOT NULL ,
+        DayofYear int NOT NULL ,
+        DayofMonth int NOT NULL ,
+        DayofWeek int NOT NULL ,
+        IsWeekend bit NOT NULL ,
+        Comments varchar(20) NULL ,
+        CalendarWeek int NOT NULL ,
+        BusinessYearWeek int NOT NULL ,
+        LeapYear tinyint NOT NULL,
+        CONSTRAINT PK_DimTime_TimeKey PRIMARY KEY CLUSTERED (TimeKey)
+    );
+    SET @Message = 'Completed CREATE TABLE gameDW.DimTime.';
+    RAISERROR(@Message, 0,1) WITH NOWAIT;
+END
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+SET @ErrorText = 'Failed CREATE Table gameDW.DimRetailer.';
+
+IF EXISTS (SELECT *
+FROM sys.objects
+WHERE object_id = OBJECT_ID(N'gameDW.DimRetailer') AND type in (N'U'))
+BEGIN
+    SET @Message = 'Table gameDW.DimRetailer already exist, skipping....';
+    RAISERROR(@Message, 0,1) WITH NOWAIT;
+END
+ELSE
+BEGIN
+    CREATE TABLE gameDW.DimRetailer
     (
         RetailerID TINYINT NOT NULL,
         Name NVARCHAR(50) NOT NULL,
@@ -52,110 +87,82 @@ BEGIN
         Address NVARCHAR(50) NOT NULL,
         City NVARCHAR(50) NOT NULL,
         Zip NVARCHAR(50) NOT NULL,
-        CONSTRAINT PK_Retailer_RetailerID PRIMARY KEY CLUSTERED (RetailerID),
-        CONSTRAINT UK_Retailer_Name UNIQUE (Name)
+        CONSTRAINT PK_DimRetailer_RetailerID PRIMARY KEY CLUSTERED (RetailerID),
+        CONSTRAINT UK_DimRetailer_Name UNIQUE (Name)
     );
 
-    SET @Message = 'Completed CREATE TABLE gameDW.Retailer.';
+    SET @Message = 'Completed CREATE TABLE gameDW.DimRetailer.';
     RAISERROR(@Message, 0,1) WITH NOWAIT;
 END
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
-SET @ErrorText = 'Failed CREATE Table gameDW.SalesFact.';
+SET @ErrorText = 'Failed CREATE Table gameDW.DimGame.';
 
 IF EXISTS (SELECT *
 FROM sys.objects
-WHERE object_id = OBJECT_ID(N'gameDW.SalesFact') AND type in (N'U'))
+WHERE object_id = OBJECT_ID(N'gameDW.DimGame') AND type in (N'U'))
 BEGIN
-    SET @Message = 'Table gameDW.SalesFact already exist, skipping....';
+    SET @Message = 'Table gameDW.DimGame already exist, skipping....';
     RAISERROR(@Message, 0,1) WITH NOWAIT;
 END
 ELSE
 BEGIN
-    CREATE TABLE gameDW.SalesFact
-    (
-        OrderID INT NOT NULL,
-        GameID TINYINT NOT NULL,
-        RetailerID TINYINT NOT NULL,
-        DateKey DATE NOT NULL,
-        Quantity INT NOT NULL,
-        TotalAmount MONEY NOT NULL,
-        CONSTRAINT PK_SalesFact_OrderID_GameID_RetailerID_DateKey PRIMARY KEY CLUSTERED (OrderID, GameID, RetailerID, DateKey)
-    );
-
-    SET @Message = 'Completed CREATE TABLE gameDW.SalesFact.';
-    RAISERROR(@Message, 0,1) WITH NOWAIT;
-END
--------------------------------------------------------------------------------
-
--------------------------------------------------------------------------------
-SET @ErrorText = 'Failed CREATE Table gameDW.Game.';
-
-IF EXISTS (SELECT *
-FROM sys.objects
-WHERE object_id = OBJECT_ID(N'gameDW.Game') AND type in (N'U'))
-BEGIN
-    SET @Message = 'Table gameDW.Game already exist, skipping....';
-    RAISERROR(@Message, 0,1) WITH NOWAIT;
-END
-ELSE
-BEGIN
-    CREATE TABLE gameDW.Game
+    CREATE TABLE gameDW.DimGame
     (
         GameID TINYINT NOT NULL,
         TypeID TINYINT NOT NULL,
         PartnerID TINYINT NOT NULL,
         Name NVARCHAR(50) NOT NULL,
         Note NVARCHAR(250) NOT NULL,
-        CONSTRAINT PK_Game_GameID PRIMARY KEY CLUSTERED (GameID),
-        CONSTRAINT UK_Game_Name UNIQUE (Name)
+        CONSTRAINT PK_DimGame_GameID PRIMARY KEY CLUSTERED (GameID),
+        CONSTRAINT UK_DimGame_Name UNIQUE (Name)
     );
 
-    SET @Message = 'Completed CREATE TABLE gameDW.Game.';
+    SET @Message = 'Completed CREATE TABLE gameDW.DimGame.';
     RAISERROR(@Message, 0,1) WITH NOWAIT;
 END
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
-SET @ErrorText = 'Failed CREATE Table gameDW.Type.';
+SET @ErrorText = 'Failed CREATE Table gameDW.DimType.';
 
 IF EXISTS (SELECT *
 FROM sys.objects
-WHERE object_id = OBJECT_ID(N'gameDW.Type') AND type in (N'U'))
+WHERE object_id = OBJECT_ID(N'gameDW.DimType') AND type in (N'U'))
 BEGIN
-    SET @Message = 'Table gameDW.Type already exist, skipping....';
+    SET @Message = 'Table gameDW.DimType already exist, skipping....';
     RAISERROR(@Message, 0,1) WITH NOWAIT;
 END
 ELSE
 BEGIN
-    CREATE TABLE gameDW.Type
+    CREATE TABLE gameDW.DimType
     (
         TypeID TINYINT NOT NULL,
         Name NVARCHAR(50) NOT NULL,
         Note NVARCHAR(250) NOT NULL,
-        CONSTRAINT PK_Type_TypeID PRIMARY KEY CLUSTERED (TypeID),
-        CONSTRAINT UK_Type_Name UNIQUE (Name)
+        CONSTRAINT PK_DimType_TypeID PRIMARY KEY CLUSTERED (TypeID),
+        CONSTRAINT UK_DimType_Name UNIQUE (Name)
     );
 
-    SET @Message = 'Completed CREATE TABLE gameDW.Type.';
+    SET @Message = 'Completed CREATE TABLE gameDW.DimType.';
     RAISERROR(@Message, 0,1) WITH NOWAIT;
 END
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
-SET @ErrorText = 'Failed CREATE Table gameDW.Partner.';
+SET @ErrorText = 'Failed CREATE Table gameDW.DimPartner.';
 
 IF EXISTS (SELECT *
 FROM sys.objects
-WHERE object_id = OBJECT_ID(N'gameDW.Partner') AND type in (N'U'))
+WHERE object_id = OBJECT_ID(N'gameDW.DimPartner') AND type in (N'U'))
 BEGIN
-    SET @Message = 'Table gameDW.Partner already exist, skipping....';
+    SET @Message = 'Table gameDW.DimPartner already exist, skipping....';
     RAISERROR(@Message, 0,1) WITH NOWAIT;
 END
 ELSE
 BEGIN
-    CREATE TABLE gameDW.Partner
+    CREATE TABLE gameDW.DimPartner
     (
         PartnerID TINYINT NOT NULL,
         Name NVARCHAR(50) NOT NULL,
@@ -164,14 +171,43 @@ BEGIN
         State NVARCHAR(50) NOT NULL,
         Country NVARCHAR(50) NOT NULL,
         Note NVARCHAR(250) NOT NULL,
-        CONSTRAINT PK_Partner_PartnerID PRIMARY KEY CLUSTERED (PartnerID),
-        CONSTRAINT UK_Partner_Name UNIQUE (Name)
+        CONSTRAINT PK_DimPartner_PartnerID PRIMARY KEY CLUSTERED (PartnerID),
+        CONSTRAINT UK_DimPartner_Name UNIQUE (Name)
     );
 
-    SET @Message = 'Completed CREATE TABLE gameDW.Partner.';
+    SET @Message = 'Completed CREATE TABLE gameDW.DimPartner.';
     RAISERROR(@Message, 0,1) WITH NOWAIT;
 END
 -------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+SET @ErrorText = 'Failed CREATE Table gameDW.FactSales.';
+
+IF EXISTS (SELECT *
+FROM sys.objects
+WHERE object_id = OBJECT_ID(N'gameDW.FactSales') AND type in (N'U'))
+BEGIN
+    SET @Message = 'Table gameDW.FactSales already exist, skipping....';
+    RAISERROR(@Message, 0,1) WITH NOWAIT;
+END
+ELSE
+BEGIN
+    CREATE TABLE gameDW.FactSales
+    (
+        OrderID INT NOT NULL,
+        GameID TINYINT NOT NULL,
+        RetailerID TINYINT NOT NULL,
+        TimeKey INT NOT NULL,
+        Quantity INT NOT NULL,
+        TotalAmount MONEY NOT NULL,
+        CONSTRAINT PK_FactSales_OrderID_GameID_RetailerID_TimeKey PRIMARY KEY CLUSTERED (OrderID, GameID, RetailerID, TimeKey)
+    );
+
+    SET @Message = 'Completed CREATE TABLE gameDW.FactSales.';
+    RAISERROR(@Message, 0,1) WITH NOWAIT;
+END
+-------------------------------------------------------------------------------
+
 
 SET @Message = 'Completed SP ' + @SP + '. Duration in minutes:  '   
    + CONVERT(VARCHAR(12), CONVERT(DECIMAL(6,2),datediff(mi, @StartTime, getdate())));   

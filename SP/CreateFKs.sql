@@ -37,7 +37,7 @@ SET @ErrorText = 'Failed adding FOREIGN KEY for Table gameDW.Game.';
 
 IF EXISTS (SELECT *
 FROM sys.foreign_keys
-WHERE object_id = OBJECT_ID(N'gameDW.FK_Game_Type_TypeID')
+WHERE object_id = OBJECT_ID(N'gameDW_FK_DimGame_DimType_TypeID')
   AND parent_object_id = OBJECT_ID(N'gameDW.Game')
 )
 BEGIN
@@ -46,11 +46,11 @@ BEGIN
 END
 ELSE
 BEGIN
-  ALTER TABLE gameDW.Game
-   ADD CONSTRAINT FK_Game_Type_TypeID FOREIGN KEY (TypeID)
-      REFERENCES gameDW.Type (TypeID),
-      CONSTRAINT FK_Game_Partner_PartnerID FOREIGN KEY (PartnerID)
-  REFERENCES gameDW.Partner (PartnerID);
+  ALTER TABLE gameDW.DimGame
+   ADD CONSTRAINT gameDW_FK_DimGame_DimType_TypeID FOREIGN KEY (TypeID)
+      REFERENCES gameDW.DimType (TypeID),
+      CONSTRAINT gameDW_FK_DimGame_DimPartner_PartnerID FOREIGN KEY (PartnerID)
+  REFERENCES gameDW.DimPartner (PartnerID);
 
   SET @Message = 'Completed adding FOREIGN KEY for TABLE gameDW.Game.';
   RAISERROR(@Message, 0,1) WITH NOWAIT;
@@ -62,7 +62,7 @@ SET @ErrorText = 'Failed adding FOREIGN KEY for Table gameDW.FactSales.';
 
 IF EXISTS (SELECT *
 FROM sys.foreign_keys
-WHERE object_id = OBJECT_ID(N'gameDW.FK_FactSales_Retailer_RetailerID')
+WHERE object_id = OBJECT_ID(N'gameDW_FK_FactSales_DimRetailer_RetailerID')
   AND parent_object_id = OBJECT_ID(N'gameDW.FactSales')
 )
 BEGIN
@@ -72,10 +72,12 @@ END
 ELSE
 BEGIN
   ALTER TABLE gameDW.FactSales
-   ADD CONSTRAINT FK_FactSales_Retailer_RetailerID FOREIGN KEY (RetailerID)
-      REFERENCES gameDW.Retailer (RetailerID),
-    CONSTRAINT FK_FactSales_Game_GameID FOREIGN KEY (GameID)
-      REFERENCES gameDW.Game (GameID);
+   ADD CONSTRAINT gameDW_FK_FactSales_DimRetailer_RetailerID FOREIGN KEY (RetailerID)
+      REFERENCES gameDW.DimRetailer (RetailerID),
+    CONSTRAINT gameDW_FK_FactSales_DimGame_GameID FOREIGN KEY (GameID)
+      REFERENCES gameDW.DimGame (GameID),
+          CONSTRAINT gameDW_FK_FactSales_DimTime_TimeKey FOREIGN KEY (TimeKey)
+      REFERENCES gameDW.DimTime (TimeKey);
 
   SET @Message = 'Completed adding FOREIGN KEY for TABLE gameDW.FactSales.';
   RAISERROR(@Message, 0,1) WITH NOWAIT;
