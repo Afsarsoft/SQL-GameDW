@@ -1,0 +1,13 @@
+EXEC gameDW.DropFKs;
+
+TRUNCATE TABLE gameDW.FactSales;
+GO
+TRUNCATE TABLE gameDW.DimGame;
+GO
+TRUNCATE TABLE gameDW.DimRetailer;
+GO
+TRUNCATE TABLE gameDW.DimType;
+GO
+TRUNCATE TABLE gameDW.DimPartner;
+GO
+
