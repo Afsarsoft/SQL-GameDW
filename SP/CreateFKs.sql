@@ -33,31 +33,6 @@ SET @Message = 'Started SP ' + @SP + ' at ' + FORMAT(@StartTime , 'MM/dd/yyyy HH
 RAISERROR (@Message, 0,1) WITH NOWAIT;
 
 -------------------------------------------------------------------------------
-SET @ErrorText = 'Failed adding FOREIGN KEY for Table gameDW.Game.';
-
-IF EXISTS (SELECT *
-FROM sys.foreign_keys
-WHERE object_id = OBJECT_ID(N'gameDW_FK_DimGame_DimType_TypeID')
-  AND parent_object_id = OBJECT_ID(N'gameDW.Game')
-)
-BEGIN
-  SET @Message = 'FOREIGN KEY for Table gameDW.Game already exist, skipping....';
-  RAISERROR(@Message, 0,1) WITH NOWAIT;
-END
-ELSE
-BEGIN
-  ALTER TABLE gameDW.DimGame
-   ADD CONSTRAINT gameDW_FK_DimGame_DimType_TypeID FOREIGN KEY (TypeID)
-      REFERENCES gameDW.DimType (TypeID),
-      CONSTRAINT gameDW_FK_DimGame_DimPartner_PartnerID FOREIGN KEY (PartnerID)
-  REFERENCES gameDW.DimPartner (PartnerID);
-
-  SET @Message = 'Completed adding FOREIGN KEY for TABLE gameDW.Game.';
-  RAISERROR(@Message, 0,1) WITH NOWAIT;
-END
--------------------------------------------------------------------------------
-
--------------------------------------------------------------------------------
 SET @ErrorText = 'Failed adding FOREIGN KEY for Table gameDW.FactSales.';
 
 IF EXISTS (SELECT *

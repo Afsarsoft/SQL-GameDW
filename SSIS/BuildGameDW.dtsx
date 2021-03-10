@@ -11,8 +11,8 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="Package"
   DTS:PackageType="5"
-  DTS:VersionBuild="34"
-  DTS:VersionGUID="{37EA816C-4FE8-485A-B1DB-FE0D5C919862}">
+  DTS:VersionBuild="35"
+  DTS:VersionGUID="{50CF99F9-BE9B-4C3A-9DB0-038AF2ED66ED}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -65,12 +65,7 @@
       DTS:ObjectName="DB_Connection">
       <DTS:ObjectData>
         <DTS:ConnectionManager
-          DTS:ConnectionString="Data Source=afsarsoft.database.windows.net;User ID=azuresa;Initial Catalog=SQL1;Provider=SQLNCLI11.1;Auto Translate=False;">
-          <DTS:Password
-            DTS:Name="Password"
-            Sensitive="1"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAHjdTuEbuIkWIdmtGzzipZAAAAAAIAAAARABUAFMAAAADZgAAwAAAABAAAADe39spV3pFmOsvL/THQ1i5AAAAAASAAACgAAAAEAAAAFfIMTSidqkSfaYUl1qYcGkYAAAAsAzR05xP/crIcAzWu7F9Zl5KJn8zNalnFAAAAPxrThGHbYcHiQBEHppW49DevJaV</DTS:Password>
-        </DTS:ConnectionManager>
+          DTS:ConnectionString="Data Source=.;Initial Catalog=DemoDW;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
       </DTS:ObjectData>
     </DTS:ConnectionManager>
   </DTS:ConnectionManagers>

@@ -83,10 +83,6 @@ BEGIN
     (
         RetailerID TINYINT NOT NULL,
         Name NVARCHAR(50) NOT NULL,
-        Website NVARCHAR(50) NOT NULL,
-        Address NVARCHAR(50) NOT NULL,
-        City NVARCHAR(50) NOT NULL,
-        Zip NVARCHAR(50) NOT NULL,
         CONSTRAINT PK_DimRetailer_RetailerID PRIMARY KEY CLUSTERED (RetailerID),
         CONSTRAINT UK_DimRetailer_Name UNIQUE (Name)
     );
@@ -111,71 +107,15 @@ BEGIN
     CREATE TABLE gameDW.DimGame
     (
         GameID TINYINT NOT NULL,
-        TypeID TINYINT NOT NULL,
-        PartnerID TINYINT NOT NULL,
         Name NVARCHAR(50) NOT NULL,
+        GameType NVARCHAR(50) NOT NULL,
+        Partner NVARCHAR(50) NOT NULL,
         Note NVARCHAR(250) NOT NULL,
         CONSTRAINT PK_DimGame_GameID PRIMARY KEY CLUSTERED (GameID),
         CONSTRAINT UK_DimGame_Name UNIQUE (Name)
     );
 
     SET @Message = 'Completed CREATE TABLE gameDW.DimGame.';
-    RAISERROR(@Message, 0,1) WITH NOWAIT;
-END
--------------------------------------------------------------------------------
-
--------------------------------------------------------------------------------
-SET @ErrorText = 'Failed CREATE Table gameDW.DimType.';
-
-IF EXISTS (SELECT *
-FROM sys.objects
-WHERE object_id = OBJECT_ID(N'gameDW.DimType') AND type in (N'U'))
-BEGIN
-    SET @Message = 'Table gameDW.DimType already exist, skipping....';
-    RAISERROR(@Message, 0,1) WITH NOWAIT;
-END
-ELSE
-BEGIN
-    CREATE TABLE gameDW.DimType
-    (
-        TypeID TINYINT NOT NULL,
-        Name NVARCHAR(50) NOT NULL,
-        Note NVARCHAR(250) NOT NULL,
-        CONSTRAINT PK_DimType_TypeID PRIMARY KEY CLUSTERED (TypeID),
-        CONSTRAINT UK_DimType_Name UNIQUE (Name)
-    );
-
-    SET @Message = 'Completed CREATE TABLE gameDW.DimType.';
-    RAISERROR(@Message, 0,1) WITH NOWAIT;
-END
--------------------------------------------------------------------------------
-
--------------------------------------------------------------------------------
-SET @ErrorText = 'Failed CREATE Table gameDW.DimPartner.';
-
-IF EXISTS (SELECT *
-FROM sys.objects
-WHERE object_id = OBJECT_ID(N'gameDW.DimPartner') AND type in (N'U'))
-BEGIN
-    SET @Message = 'Table gameDW.DimPartner already exist, skipping....';
-    RAISERROR(@Message, 0,1) WITH NOWAIT;
-END
-ELSE
-BEGIN
-    CREATE TABLE gameDW.DimPartner
-    (
-        PartnerID TINYINT NOT NULL,
-        Name NVARCHAR(50) NOT NULL,
-        Website NVARCHAR(50) NOT NULL,
-        City NVARCHAR(50) NOT NULL,
-        State NVARCHAR(50) NOT NULL,
-        Country NVARCHAR(50) NOT NULL,
-        Note NVARCHAR(250) NOT NULL,
-        CONSTRAINT PK_DimPartner_PartnerID PRIMARY KEY CLUSTERED (PartnerID),
-        CONSTRAINT UK_DimPartner_Name UNIQUE (Name)
-    );
-
-    SET @Message = 'Completed CREATE TABLE gameDW.DimPartner.';
     RAISERROR(@Message, 0,1) WITH NOWAIT;
 END
 -------------------------------------------------------------------------------
