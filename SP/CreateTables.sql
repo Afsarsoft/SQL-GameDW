@@ -140,7 +140,7 @@ BEGIN
         TimeKey INT NOT NULL,
         Quantity INT NOT NULL,
         TotalAmount MONEY NOT NULL,
-        CONSTRAINT PK_FactSales_OrderID_GameID_RetailerID_TimeKey PRIMARY KEY CLUSTERED (OrderID, GameID, RetailerID, TimeKey)
+        CONSTRAINT PK_FactSales_OrderID PRIMARY KEY CLUSTERED (OrderID)
     );
 
     SET @Message = 'Completed CREATE TABLE gameDW.FactSales.';
